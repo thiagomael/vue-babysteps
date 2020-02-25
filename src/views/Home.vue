@@ -1,9 +1,9 @@
 <template>
   <div class="home">
-    <button @click="newIncident()">Novo incidente (gambi)</button>
-    <incident-list v-bind:incidents="incidents"></incident-list>
-    <!-- <img alt="Vue logo" src="../assets/logo.png"> -->
-    <!-- <HelloWorld msg="Welcome to Your Vue.js App"/> -->
+    <map-toolbar :incident-factory="incidentFactory"></map-toolbar>
+    <incident-form v-if="isReporting"
+                   :incident-factory="incidentFactory"></incident-form>
+    <incident-list :incident-factory="incidentFactory"></incident-list>
   </div>
 </template>
 
@@ -12,39 +12,31 @@
 // import HelloWorld from '@/components/HelloWorld.vue';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
-import MapToolbar from '@/components/MapTools.vue';
+import MapToolbar from '@/components/MapToolbar.vue';
 import IncidentList from '@/components/IncidentList.vue';
+import IncidentForm from '@/components/IncidentForm.vue';
 
-import Incident from '@/models/Incident';
-
-const theIncidents: Array<Incident> = [];
-let theIncidentCount = 0;
+import IncidentFactory from '../models/IncidentFactory';
 
 @Component({
   components: {
     MapToolbar,
     IncidentList,
+    IncidentForm,
   },
 })
 export default class Home extends Vue {
-  incidents: Array<Incident> = theIncidents;
+  @Prop() incidentFactory!: IncidentFactory;
+
+  theIncidentFactory = this.incidentFactory;
+
+  get isReporting(): boolean {
+    return this.theIncidentFactory.reportingIncident;
+  }
 
   // eslint-disable-next-line class-methods-use-this
   newIncident() {
-    theIncidents.push(new Incident(theIncidentCount.toString(), `ximbas ${theIncidentCount}`));
-    theIncidentCount += 1;
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  created() {
-    // eslint-disable-next-line no-console
-    console.log('Created!', this.incidents);
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  mounted() {
-    // eslint-disable-next-line no-console
-    console.log('Mounted!', this.incidents);
+    this.incidentFactory.newIncident('ximbas');
   }
 }
 </script>

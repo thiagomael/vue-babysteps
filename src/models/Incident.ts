@@ -7,4 +7,10 @@ export default class Incident {
      this.id = id;
      this.name = name;
    }
+
+   // eslint-disable-next-line class-methods-use-this
+   sideEffect() {
+     // eslint-disable-next-line no-console
+     console.log(`Mandando requisição pro backend... ${this.id}`);
+   }
 }
